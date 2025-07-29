@@ -1,55 +1,58 @@
-import { useQueries } from "@tanstack/react-query";
-import useCategoriesQuery from "./useCategoriesQuery";
-import type { Category } from "../types/Category";
+import { useQuery } from "@tanstack/react-query";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../firebaseConfig";
 import type { Product } from "../types/Product";
 
-const fetchProductsByCategory = async (categoryId: number) => {
-  const res = await fetch(
-    `https://api.escuelajs.co/api/v1/categories/${categoryId}/products`
-  );
-  return res.json();
-};
-
 export default function useProductsQuery() {
-  const { data: categories, isLoading: loadingCategories } = useCategoriesQuery();
+  const productsQuery = useQuery<Product[]>({
+    queryKey: ["products"],
+    queryFn: async () => {
+      const snapshot = await getDocs(collection(db, "products"));
+      const products = snapshot.docs.map((doc) => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          name: data.name,
+          slug: data.slug,
+          description: data.description,
+          price: data.price,
+          quantity: data.quantity,
+          creationAt: data.creationAt,
+          updatedAt: data.updatedAt,
+          images: Array.isArray(data.images) ? data.images : [],
+          category: {
+            id: data.category?.id || "",
+            name: data.category?.name || "",
+          },
+        };
+      }) as Product[];
 
-  const productQueries = useQueries({
-    queries: (categories ?? []).map((cat: Category) => ({
-      queryKey: ["products", cat.id],
-      queryFn: () => fetchProductsByCategory(cat.id),
-      staleTime: 5 * 60 * 1000,
-      enabled: !!categories,
-    })),
+      return products.sort(
+        (a, b) =>
+          new Date(b.creationAt).getTime() - new Date(a.creationAt).getTime()
+      );
+    },
+    staleTime: 5 * 60 * 1000,
   });
 
-  const isLoading =
-    loadingCategories ||
-    productQueries.length !== (categories?.length || 0) ||
-    productQueries.some((q) => q.isLoading || q.isFetching);
+  const products = productsQuery.data ?? [];
 
-  const allProducts: Product[] = productQueries.flatMap((query) =>
-    Array.isArray(query.data) ? query.data : []
+  const categories = Array.from(
+    new Map(products.map((p) => [p.category.id, p.category])).values()
   );
 
-  const cleanedProducts: Product[] = allProducts
-    .sort(
-      (a, b) =>
-        new Date(b.creationAt).getTime() - new Date(a.creationAt).getTime()
-    )
-    .slice(9) // getting rid of incorrect products
-
-  const productsByCategory: Record<number, Product[]> = (categories ?? []).reduce(
-    (acc, cat) => {
-      acc[cat.id] = cleanedProducts.filter(
-        (product) => product.category?.id === cat.id
-      );
-      return acc;
-    },
-    {} as Record<number, Product[]>
-  );
+  const productsByCategory = products.reduce((acc, product) => {
+    const catId = product.category?.id ?? "uncategorized";
+    acc[catId] = acc[catId] || [];
+    acc[catId].push(product);
+    return acc;
+  }, {} as Record<string, Product[]>);
 
   return {
+    categories,
+    products,
     productsByCategory,
-    isLoading,
+    isLoading: productsQuery.isLoading,
+    isError: productsQuery.isError,
   };
 }

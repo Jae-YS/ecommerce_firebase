@@ -22,7 +22,6 @@ const AutoBreadcrumbs = () => {
 
   return (
     <Breadcrumbs
-      aria-label="breadcrumb"
       separator=">"
       sx={{ my: 2, fontSize: "0.875rem", color: "text.secondary" }}
     >

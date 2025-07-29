@@ -26,6 +26,7 @@ import {
 } from "../redux/cartSlice";
 import { type RootState } from "../store";
 import { useAuthContext } from "../context/auth/useAuthContext";
+import { createOrder } from "../hooks/useCreateOrder";
 
 type CartDrawerProps = {
   open: boolean;
@@ -46,12 +47,28 @@ const CartDrawer = ({ open, onClose }: CartDrawerProps) => {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const { setIsCartOpen } = useUIContext();
 
-  const handleCheckout = () => {
-    toast.success("Checkout successful!");
-    dispatch(clearCart());
-    setIsCartOpen(false);
-    setConfirmOpen(false);
-    navigate("/");
+  const handleCheckout = async () => {
+    if (!user || !user.email) {
+      toast.error("You must be logged in to checkout.");
+      return;
+    }
+
+    try {
+      const userForOrder = {
+        id: user.uid,
+        displayName: user.displayName ?? "",
+        email: user.email ?? "",
+      };
+      await createOrder(userForOrder, items);
+      toast.success("Checkout successful!");
+      dispatch(clearCart());
+      setIsCartOpen(false);
+      setConfirmOpen(false);
+      navigate("/home");
+    } catch (error) {
+      console.error("Failed to create order:", error);
+      toast.error("Failed to complete order");
+    }
   };
 
   return (
@@ -74,7 +91,7 @@ const CartDrawer = ({ open, onClose }: CartDrawerProps) => {
               <Box
                 component="img"
                 src={item.images?.[0]}
-                alt={item.title}
+                alt={item.name}
                 sx={{
                   width: 80,
                   height: 80,
@@ -83,7 +100,7 @@ const CartDrawer = ({ open, onClose }: CartDrawerProps) => {
                 }}
               />
               <Box flexGrow={1}>
-                <Typography fontWeight={500}>{item.title}</Typography>
+                <Typography fontWeight={500}>{item.name}</Typography>
                 <Typography color="text.secondary" fontSize={14}>
                   ${item.price.toFixed(2)}
                 </Typography>

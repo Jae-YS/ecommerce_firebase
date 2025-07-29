@@ -13,15 +13,16 @@ const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <AppProviders>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <BrowserRouter>
+    <BrowserRouter>
+      <AppProviders>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+
           <QueryClientProvider client={queryClient}>
             <App />
           </QueryClientProvider>
-        </BrowserRouter>
-      </ThemeProvider>
-    </AppProviders>
+        </ThemeProvider>
+      </AppProviders>
+    </BrowserRouter>
   </StrictMode>
 );

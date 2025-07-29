@@ -15,6 +15,7 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import AddBoxIcon from "@mui/icons-material/AddBox";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthContext } from "../context/auth/useAuthContext";
 import { useDispatch, useSelector } from "react-redux";
@@ -44,7 +45,7 @@ const NavbarDrawer: React.FC = () => {
 
   const handleLogin = () => {
     setDrawerOpen(false);
-    navigate("/login");
+    navigate("/auth");
   };
 
   const handleLogout = async () => {
@@ -61,7 +62,6 @@ const NavbarDrawer: React.FC = () => {
       <IconButton
         edge="start"
         color="inherit"
-        aria-label="menu"
         onClick={toggleDrawer(true)}
         sx={{ display: { xs: "block", md: "none" } }}
       >
@@ -118,16 +118,29 @@ const NavbarDrawer: React.FC = () => {
             </ListItem>
 
             {isAuthenticated && (
-              <ListItem disablePadding>
-                <ListItemButton
-                  component={Link}
-                  to="/profile"
-                  onClick={toggleDrawer(false)}
-                >
-                  <AccountCircleIcon sx={{ mr: 2 }} />
-                  <ListItemText primary="Profile" />
-                </ListItemButton>
-              </ListItem>
+              <>
+                <ListItem disablePadding>
+                  <ListItemButton
+                    component={Link}
+                    to="/profile"
+                    onClick={toggleDrawer(false)}
+                  >
+                    <AccountCircleIcon sx={{ mr: 2 }} />
+                    <ListItemText primary="Profile" />
+                  </ListItemButton>
+                </ListItem>
+
+                <ListItem disablePadding>
+                  <ListItemButton
+                    component={Link}
+                    to="/products/new"
+                    onClick={toggleDrawer(false)}
+                  >
+                    <AddBoxIcon sx={{ mr: 2 }} />
+                    <ListItemText primary="Add Product" />
+                  </ListItemButton>
+                </ListItem>
+              </>
             )}
           </List>
 

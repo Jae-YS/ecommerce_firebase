@@ -22,12 +22,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       setIsAppLoading(false);
 
       if (firebaseUser) {
-        navigate("/home", { replace: true });
+        const currentPath = location.pathname;
+        const shouldRedirect =
+          currentPath === "/" || currentPath === "/auth" || currentPath === "";
+
+        if (shouldRedirect) {
+          navigate("/home", { replace: true });
+        }
       }
     });
 
     return () => unsubscribe();
   }, [navigate, setIsAppLoading]);
+
+  if (loading) return null;
 
   return (
     <AuthContext.Provider value={{ user, loading }}>

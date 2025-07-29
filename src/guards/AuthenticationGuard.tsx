@@ -9,7 +9,7 @@ const AuthenticationGuard: React.FC<AuthenticationGuardProps> = ({
   component: Component,
 }) => {
   const { user } = useAuthContext();
-  return user ? <Component /> : <Navigate to="/login" />;
+  return user ? <Component /> : <Navigate to="/auth" />;
 };
 
 export default AuthenticationGuard;

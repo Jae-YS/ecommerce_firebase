@@ -35,7 +35,7 @@ const ProductCard = ({ product }: { product: Product }) => {
         <CardMedia
           component="img"
           image={product.images[0]}
-          alt={product.title}
+          alt={product.name}
           sx={{
             width: "100%",
             height: "100%",
@@ -83,7 +83,7 @@ const ProductCard = ({ product }: { product: Product }) => {
             color: "text.primary",
           }}
         >
-          {product.title}
+          {product.name}
         </Typography>
 
         <Typography

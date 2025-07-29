@@ -1,51 +1,53 @@
+import React, { useEffect, useState } from "react";
 import { Box, Button, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
 import MainLayout from "../layout/MainLayout";
 import useProductsQuery from "../hooks/useProductsQuery";
-import type { Product } from "../types/Product";
-import React, { useEffect, useRef, useState } from "react";
 import { useUIContext } from "../context/ui/useUIContext";
 import ProductCard from "../components/ProductCard";
 import FilterBar from "../components/FilterBar";
-import { STATIC_CATEGORIES } from "../constants/Categories";
+import type { Product } from "../types/Product";
 import type { ProductFilterState } from "../types/ProductFilterState";
 import { useFilteredProducts } from "../hooks/useProductFilters";
 import { useVisibleProducts } from "../hooks/useVisibleProducts";
+import { STATIC_CATEGORIES } from "../constants/Categories";
+
+const INITIAL_VISIBLE_COUNT = 16;
+
+const CATEGORY_MAP = Object.fromEntries(
+  STATIC_CATEGORIES.map((cat) => [cat.id, cat.name])
+);
 
 const ProductsPage: React.FC = () => {
-  const { id: categoryId } = useParams();
+  const { id: categoryId } = useParams<{ id?: string }>();
   const { productsByCategory, isLoading } = useProductsQuery();
+
   const { setIsAppLoading } = useUIContext();
-  const prev = useRef<boolean | null>(null);
-
   const [filters, setFilters] = useState<ProductFilterState | null>(null);
-
-  const [visibleCount, setVisibleCount] = useState(16);
+  const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_COUNT);
 
   useEffect(() => {
-    if (prev.current === null || prev.current !== isLoading) {
-      prev.current = isLoading;
-      setIsAppLoading(isLoading);
-    }
+    setIsAppLoading(isLoading);
   }, [isLoading, setIsAppLoading]);
 
   const handleApplyFilters = (newFilters: ProductFilterState) => {
     setFilters(newFilters);
-    setVisibleCount(16);
+    setVisibleCount(INITIAL_VISIBLE_COUNT);
   };
 
-  const pageTitle = categoryId
-    ? STATIC_CATEGORIES.find((cat) => cat.id === Number(categoryId))?.name ??
-      "Category"
-    : "All Products";
+  const categoryName =
+    categoryId !== undefined ? CATEGORY_MAP[categoryId] : undefined;
+  const pageTitle = categoryName ?? "All Products";
 
-  const allProducts = Object.values(productsByCategory).flat();
+  const allProducts =
+    categoryId !== undefined
+      ? productsByCategory?.[categoryId] ?? []
+      : Object.values(productsByCategory).flat();
+
   const filteredProducts = useFilteredProducts(allProducts, pageTitle, filters);
   const visibleProducts = useVisibleProducts(filteredProducts, visibleCount);
 
-  if (isLoading || !productsByCategory) {
-    return null;
-  }
+  if (isLoading) return null;
 
   return (
     <MainLayout>

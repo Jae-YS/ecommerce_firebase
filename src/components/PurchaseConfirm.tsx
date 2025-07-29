@@ -64,7 +64,7 @@ const PurchaseConfirm: React.FC<PurchaseConfirmProps> = ({
         }}
       >
         {title}
-        <IconButton onClick={onClose} size="small" aria-label="close">
+        <IconButton onClick={onClose} size="small">
           <CloseIcon />
         </IconButton>
       </DialogTitle>

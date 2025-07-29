@@ -1,7 +1,7 @@
 import { Box, Button, Typography, CardMedia } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
-import MainLayout from "../layout/MainLayout";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import MainLayout from "../layout/MainLayout";
 import { useFetchProductBySlug } from "../hooks/useFetchProductBySlug";
 import { useUIContext } from "../context/ui/useUIContext";
 import ConfirmModal from "../components/ConfirmationModal";
@@ -9,27 +9,50 @@ import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../redux/cartSlice";
 import { useAuthContext } from "../context/auth/useAuthContext";
-const ProductDetailPage = () => {
-  const [openConfirm, setOpenConfirm] = useState(false);
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { user } = useAuth0();
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { deleteDoc, doc } from "firebase/firestore";
+import { db } from "../firebaseConfig";
+import { createOrder } from "../hooks/useCreateOrder";
 
-  const productSlug = useParams<{ slug: string }>().slug ?? "";
-  const { data: product, isLoading } = useFetchProductBySlug(productSlug);
+const ProductDetailPage = () => {
+  const { slug = "" } = useParams<{ slug: string }>();
+  const { data: product, isLoading } = useFetchProductBySlug(slug);
+  const { user } = useAuthContext();
   const { setIsAppLoading } = useUIContext();
-  const prev = useRef<boolean | null>(null);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const isOwner = user?.email === product?.createdBy?.email;
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
-    if (prev.current === null || prev.current !== isLoading) {
-      prev.current = isLoading;
-      setIsAppLoading(isLoading);
-    }
-  }, [isLoading, setIsAppLoading]);
+    setIsAppLoading(isLoading || deleting);
+  }, [isLoading, deleting, setIsAppLoading]);
 
-  if (isLoading || !product) {
-    return null;
-  }
+  if (isLoading || !product) return null;
+
+  const handleDelete = async () => {
+    if (!product?.id) return;
+
+    const confirm = window.confirm(
+      "Are you sure you want to delete this product? This action cannot be undone."
+    );
+
+    if (!confirm) return;
+
+    try {
+      setDeleting(true);
+      await deleteDoc(doc(db, "products", product.id));
+      toast.success("Product deleted.");
+      navigate("/home");
+    } catch (err) {
+      toast.error("Failed to delete product.");
+      console.error(err);
+    } finally {
+      setDeleting(false);
+    }
+  };
 
   const formattedDate = new Date(product.creationAt).toLocaleDateString(
     "en-US",
@@ -41,19 +64,37 @@ const ProductDetailPage = () => {
   );
 
   const handleAddToCart = () => {
-    if (!user?.email) return;
+    if (!user?.email)
+      return toast.error("You must be logged in to add to cart");
     dispatch(addToCart({ product, email: user.email }));
     toast.success("Product added to cart!");
   };
 
   const handleBuyNow = () => {
+    if (!user?.email) return toast.error("You must be logged in to buy");
     setOpenConfirm(true);
   };
 
-  const confirmPurchase = () => {
-    setOpenConfirm(false);
-    toast.success("Purchase successful!");
-    navigate("/home");
+  const confirmPurchase = async () => {
+    if (!user || !product || !user.email) {
+      toast.error("Missing user or product info.");
+      return;
+    }
+
+    try {
+      const userForOrder = {
+        id: user.uid,
+        displayName: user.displayName ?? "",
+        email: user.email ?? "",
+      };
+      await createOrder(userForOrder, [product]);
+      toast.success("Purchase successful!");
+      setOpenConfirm(false);
+      navigate("/home");
+    } catch (error) {
+      console.error("Failed to create order:", error);
+      toast.error("Failed to complete order");
+    }
   };
 
   return (
@@ -69,8 +110,8 @@ const ProductDetailPage = () => {
           <Box sx={{ flex: 1 }}>
             <CardMedia
               component="img"
-              image={product.images[0]}
-              alt={product.title}
+              image={product.images?.[0] || ""}
+              alt={product.name}
               sx={{
                 width: "100%",
                 height: "100%",
@@ -81,9 +122,38 @@ const ProductDetailPage = () => {
           </Box>
 
           <Box sx={{ flex: 1 }}>
-            <Typography variant="h4" sx={{ fontWeight: 600 }}>
-              {product.title}
-            </Typography>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              <Typography variant="h4" sx={{ fontWeight: 600 }}>
+                {product.name}
+              </Typography>
+
+              {isOwner && (
+                <>
+                  <EditIcon
+                    onClick={() => navigate(`/update-product/${product.slug}`)}
+                    sx={{
+                      fontSize: 22,
+                      cursor: "pointer",
+                      color: "text.secondary",
+                      "&:hover": {
+                        color: "primary.main",
+                      },
+                    }}
+                  />
+                  <DeleteIcon
+                    onClick={handleDelete}
+                    sx={{
+                      fontSize: 22,
+                      cursor: "pointer",
+                      color: "text.secondary",
+                      "&:hover": {
+                        color: "error.main",
+                      },
+                    }}
+                  />
+                </>
+              )}
+            </Box>
 
             <Box
               sx={{
@@ -95,10 +165,10 @@ const ProductDetailPage = () => {
                 color: "text.secondary",
               }}
             >
-              <Typography variant="subtitle2" sx={{ mt: 1 }}>
+              <Typography variant="subtitle2">
                 {product.category.name}
               </Typography>
-              <Typography variant="body2" sx={{ mt: 1 }}>
+              <Typography variant="body2">
                 Created on: {formattedDate}
               </Typography>
             </Box>
@@ -106,6 +176,7 @@ const ProductDetailPage = () => {
             <Typography variant="h6" sx={{ mt: 2, color: "error.main" }}>
               ${product.price.toFixed(2)}
             </Typography>
+
             <Typography variant="body1" sx={{ mt: 2, color: "text.secondary" }}>
               {product.description}
             </Typography>
@@ -124,8 +195,10 @@ const ProductDetailPage = () => {
               >
                 Add to Cart
               </Button>
+
               <Button
                 variant="contained"
+                onClick={handleBuyNow}
                 sx={{
                   backgroundColor: "primary.main",
                   color: "primary.contrastText",
@@ -133,7 +206,6 @@ const ProductDetailPage = () => {
                     backgroundColor: "#914D2F",
                   },
                 }}
-                onClick={handleBuyNow}
               >
                 Buy Now
               </Button>
@@ -141,11 +213,12 @@ const ProductDetailPage = () => {
           </Box>
         </Box>
       </Box>
+
       <ConfirmModal
         open={openConfirm}
         onClose={() => setOpenConfirm(false)}
         onConfirm={confirmPurchase}
-        productTitle={product.title}
+        productTitle={product.name}
         price={product.price}
       />
     </MainLayout>

@@ -1,0 +1,166 @@
+{
+  "__collections__": {
+    "products": {
+      "product-001": {
+        "name": "Minimalist T-Shirt",
+        "slug": "minimalist-tshirt",
+        "price": 19.99,
+        "description": "Soft cotton t-shirt with a clean design.",
+        "images": ["https://placehold.co/600x400/png?text=T-Shirt"],
+        "category": { "id": 1, "name": "Clothes" },
+        "creationAt": "2024-07-28T00:00:00Z",
+        "updatedAt": "2024-07-28T00:00:00Z",
+        "quantity": 50,
+        "createdBy": {
+          "id": "AF522a7cGhZh6pJSzifDYPwZvfW2",
+          "name": "test",
+          "email": "test@gmail.com"
+        }
+      },
+      "product-002": {
+        "name": "Bluetooth Earbuds",
+        "slug": "bluetooth-earbuds",
+        "price": 49.99,
+        "description": "Wireless earbuds with noise cancellation and long battery life.",
+        "images": ["https://placehold.co/600x400/png?text=Earbuds"],
+        "category": { "id": 2, "name": "Electronics" },
+        "creationAt": "2024-07-28T00:00:00Z",
+        "updatedAt": "2024-07-28T00:00:00Z",
+        "quantity": 80,
+        "createdBy": {
+          "id": "AF522a7cGhZh6pJSzifDYPwZvfW2",
+          "name": "test",
+          "email": "test@gmail.com"
+        }
+      },
+      "product-003": {
+        "name": "Ergonomic Office Chair",
+        "slug": "ergonomic-chair",
+        "price": 189.99,
+        "description": "Adjustable chair with lumbar support and mesh back.",
+        "images": ["https://placehold.co/600x400/png?text=Chair"],
+        "category": { "id": 3, "name": "Furniture" },
+        "creationAt": "2024-07-28T00:00:00Z",
+        "updatedAt": "2024-07-28T00:00:00Z",
+        "quantity": 30,
+        "createdBy": {
+          "id": "AF522a7cGhZh6pJSzifDYPwZvfW2",
+          "name": "test",
+          "email": "test@gmail.com"
+        }
+      },
+      "product-004": {
+        "name": "Running Sneakers",
+        "slug": "running-sneakers",
+        "price": 74.5,
+        "description": "Lightweight, breathable running shoes for daily use.",
+        "images": ["https://placehold.co/600x400/png?text=Sneakers"],
+        "category": { "id": 4, "name": "Shoes" },
+        "creationAt": "2024-07-28T00:00:00Z",
+        "updatedAt": "2024-07-28T00:00:00Z",
+        "quantity": 40,
+        "createdBy": {
+          "id": "AF522a7cGhZh6pJSzifDYPwZvfW2",
+          "name": "test",
+          "email": "test@gmail.com"
+        }
+      },
+      "product-005": {
+        "name": "Multi-tool Set",
+        "slug": "multi-tool-set",
+        "price": 29.95,
+        "description": "Compact multi-tool with knife, screwdriver, and more.",
+        "images": ["https://placehold.co/600x400/png?text=Multi-Tool"],
+        "category": { "id": 5, "name": "Miscellaneous" },
+        "creationAt": "2024-07-28T00:00:00Z",
+        "updatedAt": "2024-07-28T00:00:00Z",
+        "quantity": 60,
+        "createdBy": {
+          "id": "yjft0RqnILQWo9S2AoOwhrWCTKH3",
+          "name": "test",
+          "email": "jaeyseo0922@gmail.com"
+        }
+      },
+      "product-006": {
+        "name": "Linen Button-Down Shirt",
+        "slug": "linen-shirt",
+        "price": 32.0,
+        "description": "Breathable linen shirt perfect for summer wear.",
+        "images": ["https://placehold.co/600x400/png?text=Shirt"],
+        "category": { "id": 1, "name": "Clothes" },
+        "creationAt": "2024-07-28T00:00:00Z",
+        "updatedAt": "2024-07-28T00:00:00Z",
+        "quantity": 35,
+        "createdBy": {
+          "id": "yjft0RqnILQWo9S2AoOwhrWCTKH3",
+          "name": "test",
+          "email": "jaeyseo0922@gmail.com"
+        }
+      },
+      "product-007": {
+        "name": "Smartwatch Series 5",
+        "slug": "smartwatch-series-5",
+        "price": 199.99,
+        "description": "Smartwatch with health tracking and notifications.",
+        "images": ["https://placehold.co/600x400/png?text=Smartwatch"],
+        "category": { "id": 2, "name": "Electronics" },
+        "creationAt": "2024-07-28T00:00:00Z",
+        "updatedAt": "2024-07-28T00:00:00Z",
+        "quantity": 25,
+        "createdBy": {
+          "id": "yjft0RqnILQWo9S2AoOwhrWCTKH3",
+          "name": "test",
+          "email": "jaeyseo0922@gmail.com"
+        },
+        "product-008": {
+          "name": "Modern Coffee Table",
+          "slug": "modern-coffee-table",
+          "price": 129.99,
+          "description": "Stylish coffee table with storage shelf.",
+          "images": ["https://placehold.co/600x400/png?text=Coffee+Table"],
+          "category": { "id": 3, "name": "Furniture" },
+          "creationAt": "2024-07-28T00:00:00Z",
+          "updatedAt": "2024-07-28T00:00:00Z",
+          "quantity": 15,
+          "createdBy": {
+            "id": "yjft0RqnILQWo9S2AoOwhrWCTKH3",
+            "name": "test",
+            "email": "jaeyseo0922@gmail.com"
+          }
+        },
+        "product-009": {
+          "name": "Leather Loafers",
+          "slug": "leather-loafers",
+          "price": 84.99,
+          "description": "Premium leather loafers for formal and casual wear.",
+          "images": ["https://placehold.co/600x400/png?text=Loafers"],
+          "category": { "id": 4, "name": "Shoes" },
+          "creationAt": "2024-07-28T00:00:00Z",
+          "updatedAt": "2024-07-28T00:00:00Z",
+          "quantity": 20,
+          "createdBy": {
+            "id": "yjft0RqnILQWo9S2AoOwhrWCTKH3",
+            "name": "test",
+            "email": "jaeyseo0922@gmail.com"
+          }
+        },
+        "product-010": {
+          "name": "Notebook & Pen Set",
+          "slug": "notebook-pen-set",
+          "price": 14.99,
+          "description": "Eco-friendly notebook with matching black ink pen.",
+          "images": ["https://placehold.co/600x400/png?text=Notebook"],
+          "category": { "id": 5, "name": "Miscellaneous" },
+          "creationAt": "2024-07-28T00:00:00Z",
+          "updatedAt": "2024-07-28T00:00:00Z",
+          "quantity": 100,
+          "createdBy": {
+            "id": "yjft0RqnILQWo9S2AoOwhrWCTKH3",
+            "name": "test",
+            "email": "jaeyseo0922@gmail.com"
+          }
+        }
+      }
+    }
+  }
+}

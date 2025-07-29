@@ -15,14 +15,14 @@ type MainLayoutProps = {
 
 const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   const { isCartOpen, setIsCartOpen } = useUIContext();
-  const { user, isAuthenticated } = useAuth0();
+  const { user } = useAuthContext();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (isAuthenticated && user?.email) {
+    if (user && user?.email) {
       dispatch(loadCart(user.email));
     }
-  }, [dispatch, isAuthenticated, user?.email]);
+  }, [dispatch, user, user?.email]);
 
   return (
     <>

@@ -9,16 +9,20 @@ import {
   Button,
   Alert,
 } from "@mui/material";
-import { auth } from "../firebaseConfig";
+import { auth, db } from "../firebaseConfig";
+import { doc, setDoc } from "firebase/firestore";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { useUIContext } from "../context/ui/useUIContext";
 
 const AuthPage = () => {
+  const { setIsAppLoading } = useUIContext();
   const [isSignup, setIsSignup] = useState(false);
   const [email, setEmail] = useState("");
+  const [displayName, setDisplayName] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
 
@@ -27,12 +31,27 @@ const AuthPage = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError(null);
+
     try {
+      setIsAppLoading(true);
+
       if (isSignup) {
-        await createUserWithEmailAndPassword(auth, email, password);
+        const userCredential = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+        const uid = userCredential.user.uid;
+
+        await setDoc(doc(db, "users", uid), {
+          email,
+          displayName,
+          createdAt: Date.now(),
+        });
       } else {
         await signInWithEmailAndPassword(auth, email, password);
       }
+
       navigate("/home");
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -40,6 +59,7 @@ const AuthPage = () => {
       } else {
         setError("An unexpected error occurred.");
       }
+      setIsAppLoading(false);
     }
   };
 
@@ -106,6 +126,18 @@ const AuthPage = () => {
               {error}
             </Alert>
           )}
+          {isSignup ? (
+            <TextField
+              label="Name"
+              fullWidth
+              variant="outlined"
+              type="text"
+              value={displayName}
+              onChange={(e) => setDisplayName(e.target.value)}
+              sx={{ mb: 2 }}
+              required
+            />
+          ) : null}
           <Button
             type="submit"
             variant="contained"

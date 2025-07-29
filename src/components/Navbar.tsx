@@ -11,6 +11,7 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import AddBoxIcon from "@mui/icons-material/AddBox";
 import { useAuthContext } from "../context/auth/useAuthContext";
 import NavLinkButton from "./NavLinkButton";
 import { STATIC_CATEGORIES } from "../constants/Categories";
@@ -43,7 +44,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick }) => {
   const isAuthenticated = !!user;
 
   const handleLogin = () => {
-    navigate("/login");
+    navigate("/auth");
   };
 
   const handleLogout = async () => {
@@ -130,7 +131,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick }) => {
                   ml: 2,
                 }}
               >
-                <IconButton onClick={onCartClick} aria-label="cart">
+                <IconButton onClick={onCartClick}>
                   <Badge badgeContent={cartItemCount} color="primary">
                     <ShoppingCartIcon />
                   </Badge>
@@ -140,6 +141,9 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick }) => {
                   <>
                     <IconButton component={Link} to="/profile">
                       <AccountCircleIcon />
+                    </IconButton>
+                    <IconButton component={Link} to="/products/new">
+                      <AddBoxIcon />
                     </IconButton>
                     <Button
                       onClick={handleLogout}

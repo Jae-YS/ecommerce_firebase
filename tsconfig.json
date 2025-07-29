@@ -6,6 +6,15 @@
   ],
 
   "compilerOptions": {
-    "types": ["jest", "@testing-library/jest-dom"]
-  }
+    "target": "ESNext",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "types": ["vite/client", "jest"],
+    "jsx": "react-jsx",
+    "strict": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true
+  },
+  "exclude": ["node_modules", "dist"]
 }

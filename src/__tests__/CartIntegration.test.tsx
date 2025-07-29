@@ -1,9 +1,10 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { Provider } from "react-redux";
-import configureStore from "redux-mock-store";
+import { configureStore } from "@reduxjs/toolkit";
 import ProductDetailPage from "../pages/ProductView";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { addToCart } from "../redux/cartSlice";
+import cartReducer from "../redux/cartSlice";
 import { UIProvider } from "../context/ui/UIProvider";
 
 jest.mock("../hooks/useFetchProductBySlug", () => ({
@@ -33,16 +34,21 @@ jest.mock("../context/auth/useAuthContext", () => ({
   }),
 }));
 
-const mockStore = configureStore([]);
-
 describe("ProductDetailPage Integration", () => {
-  let store: any;
+  let store: ReturnType<typeof configureStore>;
 
   beforeEach(() => {
-    store = mockStore({
-      cart: { items: [], userEmail: null },
+    store = configureStore({
+      reducer: {
+        cart: cartReducer,
+      },
+      preloadedState: {
+        cart: { items: [], userEmail: null },
+      },
     });
-    store.dispatch = jest.fn();
+
+    // Spy on dispatch to test if addToCart is dispatched
+    jest.spyOn(store, "dispatch");
   });
 
   it("dispatches addToCart action when Add to Cart is clicked", () => {

@@ -74,3 +74,4 @@ __mocks__/
 firebase-debug.log
 firebase-debug.*
 serviceAccountKey.json
+.vercel

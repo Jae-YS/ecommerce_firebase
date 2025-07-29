@@ -131,14 +131,13 @@ const Navbar: React.FC<NavbarProps> = ({ onCartClick }) => {
                   ml: 2,
                 }}
               >
-                <IconButton onClick={onCartClick}>
-                  <Badge badgeContent={cartItemCount} color="primary">
-                    <ShoppingCartIcon />
-                  </Badge>
-                </IconButton>
-
                 {isAuthenticated ? (
                   <>
+                    <IconButton onClick={onCartClick}>
+                      <Badge badgeContent={cartItemCount} color="primary">
+                        <ShoppingCartIcon />
+                      </Badge>
+                    </IconButton>
                     <IconButton component={Link} to="/profile">
                       <AccountCircleIcon />
                     </IconButton>

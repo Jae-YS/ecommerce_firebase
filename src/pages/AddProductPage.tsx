@@ -59,7 +59,7 @@ const AddProductPage = () => {
         images: [`https://placehold.co/600x400/png?text=${image}`],
         creationAt: now,
         updatedAt: now,
-        quantity: 1, // or let the user choose
+        quantity: 1,
         createdBy: {
           id: user.uid,
           name: user.displayName,

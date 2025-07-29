@@ -1,27 +1,75 @@
+# Node modules
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
 # Logs
-logs
-*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
+# Coverage reports
+coverage/
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
+# System files
 .DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-.env
+Thumbs.db
 
-serviceAccountKey.json
+# Firebase cache and config
+.firebase/
+.firebase-tools.json
+
+# Temporary files
+*.tmp
+*.swp
+*.lock
+*.log
+
+# Jest cache
+jest.cache
+jest-test-results.json
+
+# Test coverage
+coverage/
+*.lcov
+
+# Editor settings
+.vscode/
+.idea/
+
+# MacOS system files
+*.DS_Store
+
+# Build artifacts
+*.tgz
+
+# GitHub Actions artifacts
+*.bak
+
+# Compiled TypeScript
+*.tsbuildinfo
+
+# Service worker cache
+sw.js
+
+# Vercel build output
+.vercel/
+
+# Storybook build files (if using)
+storybook-static/
+
+# Optional: test mocks and snapshots
+__mocks__/
+*.snap
+
+# Firebase credentials (if not already ignored)
+firebase-debug.log
+firebase-debug.*

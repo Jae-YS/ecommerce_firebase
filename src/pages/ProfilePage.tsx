@@ -56,12 +56,24 @@ const ProfilePage: React.FC = () => {
 
     const docRef = doc(db, "users", user.uid);
     await updateDoc(docRef, {
-      name: formData.name,
+      displayName: formData.name,
       email: formData.email,
     });
-
-    if (user.email !== formData.email) {
-      await updateEmail(user, formData.email);
+    try {
+      if (user.email !== formData.email) {
+        await updateEmail(user, formData.email);
+      }
+    } catch (err: unknown) {
+      if (
+        typeof err === "object" &&
+        err !== null &&
+        "code" in err &&
+        (err as { code: string }).code === "auth/requires-recent-login"
+      ) {
+        alert("Please log in again to change your email.");
+      } else {
+        console.error(err);
+      }
     }
 
     setEditing(false);

@@ -32,6 +32,6 @@ export default function useFetchUser() {
         return null;
       }
     },
-    staleTime: 1000 * 60 * 5, // optional: cache for 5 mins
+    staleTime: 1000 * 60 * 5,
   });
 }
